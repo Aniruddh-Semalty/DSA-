@@ -1,1 +1,130 @@
+                           // trie implementation basic insert ,delete,search operations using c++language
 
+
+class TrieNode
+{
+public:
+char data;
+TrieNode* children[26];
+bool isTerminal;  
+TrieNode(char ch)
+{
+data=ch;
+for(int i=0;i<26;i++)
+{
+children[i]=NULL;
+}
+isTerminal=false;
+}
+};
+
+
+class Trie{
+    public:
+    TrieNode* root;
+    public:
+    Trie()
+    {
+      root=new TrieNode('\0');   
+    }
+    void insertUtil(TrieNode* root,string s)
+    {
+        if(s.length()==0) //if our string length become empty make root as terminal node
+        {
+            root->isTerminal=true;
+            return;
+        }
+        
+        int index=s[0]-'a'; //assuming trie for lower case characters
+        TrieNode *child;
+        if(root->children[index]!=NULL)
+        {
+            child=root->children[index];
+        }
+        else
+        {
+            child=new TrieNode(s[0]);
+            root->children[index]=child;
+        }
+        
+        insertUtil(child,s.substr(1)); //call the function for our new root node as child node and next charcter of our string
+        
+}
+    
+    void insertword(string s)
+    {
+        insertUtil(root,s);
+    }
+    
+    
+    bool searchUtil(TrieNode* root,string s)
+    {
+        if(s.length()==0)
+        {
+            return root->isTerminal?true:false;
+        }
+           int index=s[0]-'a'; //assuming trie for lower case characters
+        TrieNode *child;
+        if(root->children[index]!=NULL)
+        {
+            child=root->children[index];
+        }
+        else //if not present return false directly
+        {
+           return false;
+        }
+        
+        return searchUtil(child,s.substr(1));  //call the function for our new root node as child node and next charcter of our string
+        
+         }
+    
+    bool searchword(string s)
+    {
+        return searchUtil(root,s);
+    }
+    
+    
+    void deleteUtil(TrieNode*root,string s)
+    {
+        if(s.length()==0)
+        {
+            root->isTerminal=false; //by doing this now it's not the terminating node so next time we try to search the string we get false beacuse we dont have a terminating node
+            return;
+        }
+        
+        
+         int index=s[0]-'a'; //assuming trie for lower case characters
+        TrieNode *child;
+        if(root->children[index]!=NULL)
+        {
+            child=root->children[index];
+        }
+        else
+        {
+            return;
+        }
+        
+        deleteUtil(child,s.substr(1)); //call the function for our new root node as child node and next charcter of our string
+    }
+    
+    void deleteword(string s)
+    {
+        deleteUtil(root,s);
+    }
+    
+};
+
+
+
+
+int main() {
+   Trie * t=new Trie();
+    t->insertword("abcd");
+    t->insertword("abda");
+    t->insertword("bcd");
+    cout<<t->searchword("abcd")<<endl; //give 1 abcd exist
+     cout<<t->searchword("abbd")<<endl; //give 0 abbd does not exist in the trie
+    t->deleteword("abcd");
+    cout<<t->searchword("abcd")<<endl; //now abcd does not exist so it will give 0
+    
+}
