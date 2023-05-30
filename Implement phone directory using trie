@@ -1,0 +1,126 @@
+                                              //full implemetation implemented in coding ninjas
+ 
+ 
+ class TrieNode{
+    public:
+    char data;
+    TrieNode* children[26];
+    bool isTerminal;
+    TrieNode(char ch)
+    {
+        data=ch;
+        for(int i=0;i<26;i++)
+        {
+            children[i]=NULL;
+        }
+        isTerminal=false;
+    }
+};
+
+
+class Trie{
+    public:
+    TrieNode* root;
+    Trie()
+    {
+        root=new TrieNode('\0');
+    }
+
+    void insertUtil(TrieNode* root,string s)
+    {
+        if(s.length()==0)
+        {
+            root->isTerminal=true;
+            return;
+        }
+        int idx=s[0]-'a';
+        TrieNode* child;
+        if(root->children[idx]!=NULL)
+        {
+            child=root->children[idx];
+        }
+        else{
+            child=new TrieNode(s[0]);
+            root->children[idx]=child;
+        }
+
+        insertUtil(child,s.substr(1));
+
+
+
+    }
+
+    void insertWord(string s)
+    {
+        insertUtil(root,  s);
+    }
+
+    void printSuggestions(TrieNode* curr,vector<string>& temp,string prefix)
+    {
+        if(curr->isTerminal)
+        {
+            temp.push_back(prefix);
+        }
+
+        for(char c='a';c<='z';c++)
+        {
+            TrieNode* next=curr->children[c-'a'];
+            if(next!=NULL)
+            {
+               prefix.push_back(c);
+               printSuggestions(next, temp, prefix);
+               //backtrack after printing  it 
+               prefix.pop_back();
+
+            }
+        }
+    }
+
+
+
+
+
+   
+    vector<vector<string>> getsuggestions(string querystr)
+    {   
+
+        //prev to track our prev character so that we will not traverse again and again
+        TrieNode* prev=root;
+        vector<vector<string>>output;
+
+        string prefix="";
+        for (int i = 0; i < querystr.length(); i++) {
+          prefix.push_back(querystr[i]);
+          TrieNode *curr = prev->children[querystr[i] - 'a'];
+
+          if (curr == NULL) // if not found just break the loop and return
+            break;
+          vector<string> temp;
+          printSuggestions(curr, temp, prefix);
+          output.push_back(temp);
+          // empty temp after storing it in output array
+          temp.clear();
+          // now new prev is our curr for further suggestions
+          prev = curr;
+        }//end for
+        return output;
+    }
+};
+
+
+  
+  
+  //main functions->
+vector<vector<string>> phoneDirectory(vector<string>&contactList, string &queryStr)
+{
+    Trie* t=new Trie(); //step1-create trie class
+    for(int i=0;i<contactList.size();i++)
+    {
+        // step2-insert all the words in trie
+        t->insertWord(contactList[i]);
+    }
+
+  //get suggestions
+    return t->getsuggestions(queryStr);
+    
+}
