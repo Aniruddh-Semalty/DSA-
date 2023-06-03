@@ -1,0 +1,50 @@
+                                                   //dfs traversal for undirectional disconnected graph
+#include<bits/stdc++.h>
+void createAdjList( unordered_map<int,set<int>>&adjList,vector<vector<int>> &edges)
+{
+    for(int i=0;i<edges.size();i++)
+    {
+        int u=edges[i][0];
+        int v=edges[i][1];
+        adjList[u].insert(v);
+        adjList[v].insert(u);
+    }
+}
+
+
+void dfs(int node,vector<int>&component, unordered_map<int,bool>&visited,unordered_map<int,set<int>>&adjList)
+{
+    visited[node]=true;
+    component.push_back(node);
+
+    for(auto i:adjList[node])
+    {
+        if(!visited[i])
+        {
+            dfs(i,component,visited,adjList);
+        }
+    }
+
+
+
+}
+
+vector<vector<int>> depthFirstSearch(int V, int E, vector<vector<int>> &edges)
+{ 
+    //first we need to create a adjacency list
+    unordered_map<int,set<int>>adjList;
+   createAdjList(adjList,edges);
+   unordered_map<int,bool>visited;
+   vector<vector<int>>ans;
+   for(int i=0;i<V;i++)
+   {
+       if(!visited[i])
+       {
+           vector<int>component; //only for disconnected graph other wise direct call dfs method;
+           dfs(i,component,visited,adjList); //call this function for non disconnected graph direct dont use any for loop
+           ans.push_back(component);
+       }
+   }
+   return ans;
+
+}
