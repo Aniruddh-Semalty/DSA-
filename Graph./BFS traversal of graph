@@ -1,0 +1,68 @@
+                                                                        //bfs of graph here we are getting connected edges in the form of vector in input and also the no of vertex
+
+#include <bits/stdc++.h> 
+
+void createAdjList(unordered_map<int,set<int>>&adjList,vector<pair<int, int>> &edges)  //function for creating adjacency list
+{
+    for(int i=0;i<edges.size();i++)
+    {
+        int u=edges[i].first;
+        int v=edges[i].second;
+        adjList[u].insert(v);
+        adjList[v].insert(u);//for undirectional graph only
+
+
+    }
+
+
+
+}
+
+void bfs(unordered_map<int,set<int>>&adjList, vector<int>&ans, unordered_map<int,bool>&visited,int i)
+{
+    visited[i]=true;
+    queue<int>q;
+    q.push(i);
+    while(!q.empty())
+    {
+        int frontnode=q.front();
+        q.pop();
+        ans.push_back(frontnode);
+
+        for(auto i:adjList[frontnode])
+        {
+            if(!visited[i])
+            {
+                q.push(i);
+                visited[i]=true;
+            }
+        }
+
+
+
+
+    }
+}
+
+
+vector<int> BFS(int vertex, vector<pair<int, int>> edges)                  //this is our main function
+{
+   //we are getting edges here so first we need to create adjacency list in sorted order 
+   //so for that we use orderedset inside our map
+   unordered_map<int,set<int>>adjList;
+   vector<int>ans;
+   unordered_map<int,bool>visited;
+    createAdjList(adjList,edges);
+    for(int i=0;i<vertex;i++)
+    {
+        if(!visited[i])
+        {
+            bfs(adjList,ans,visited,i);
+        }
+    }
+    return ans;
+
+
+
+
+}
