@@ -1,0 +1,60 @@
+                                                            //below is the topological sorting using dfs traversal technique
+
+
+#include <bits/stdc++.h> 
+void createAdjList( vector<vector<int>>&adjList,vector<vector<int>>&edges,int &e)
+{
+  for (int i = 0; i < e; i++) {
+    int u = edges[i][0];
+    int v=edges[i][1];
+    adjList[u].push_back(v);
+  }
+}
+
+void topoSort(int node,  vector<vector<int>>&adjList,vector<bool>&visited,stack<int>&st)
+{
+    visited[node]=true;
+    for(int i :adjList[node])
+    {
+            if(!visited[i])
+            {
+                topoSort(i,adjList,visited,st);
+            }
+    }
+    st.push(node);
+
+
+
+}
+
+
+vector<int> topologicalSort(vector<vector<int>> &edges, int v, int e)  {
+        vector<vector<int>>adjList(v);
+        //  unordered_map<int,list<int>>adjList;
+        createAdjList(adjList,edges,e);
+        vector<bool>visited(v);
+        stack<int>st;
+        for(int i=0;i<v;i++)
+        {
+            if(!visited[i])
+            {
+                topoSort(i,adjList,visited,st);
+            }
+        }
+        vector<int>ans;
+        while(!st.empty())
+        {
+            ans.push_back(st.top());
+            st.pop();
+        }
+        return ans;
+
+
+
+
+
+
+
+
+
+}
