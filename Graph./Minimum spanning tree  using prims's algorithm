@@ -1,0 +1,86 @@
+                                                                //Minimum spanning tree  using prims's algorithm
+                                                                          //  code done in codestudio
+
+                                                                   //using vectors
+#include <bits/stdc++.h> 
+vector<pair<pair<int, int>, int>> calculatePrimsMST(int n, int m, vector<pair<pair<int, int>, int>> &g)
+{
+   //create adjacnecy list
+   unordered_map<int,list<pair<int,int>>>adjList;
+   for(int i=0;i<g.size();i++)
+   {
+       int u=g[i].first.first;
+       int v=g[i].first.second;
+       int wt=g[i].second;
+
+       adjList[u].push_back(make_pair(v,wt));
+       adjList[v].push_back(make_pair(u,wt));
+
+    }
+
+      //using prims algo
+      //step 1-->make 3 arrays and initailze them]
+      int start=1;
+      vector<int>minWeight(n+1);//(n+1)beacuase weights are starting from 1 to n and evry index should denote a node value
+      vector<int>parent(n+1);
+      vector<bool>mst(n+1);
+      for(int i=0;i<=n;i++)
+      {
+          minWeight[i]=INT_MAX;
+          parent[i]=-1;
+          mst[i]=false;
+      }
+      //mark starting node minweight as 0
+      minWeight[1]=0;
+      parent[1]=-1;
+
+
+    for(int i=1;i<n;i++)
+    {
+
+        //find minimum in wieght array
+        int mini=INT_MAX;
+        int min_idx=-1;
+        for(int j=1;j<=n;j++)
+        {
+            if(mst[j]==false &&minWeight[j]<mini)
+            {
+                mini=minWeight[j];
+                min_idx=j;
+            }
+        }
+
+
+        //step2->mark mini as true in mst
+        mst[min_idx]=true;
+
+
+        //step->3 traverese its adjacents
+        for(auto neighbour:adjList[min_idx])
+        {
+            int v=neighbour.first;
+            int u=neighbour.second;
+
+            if(mst[v]==false && minWeight[v]>u )
+            {
+                minWeight[v]=u;    
+                parent[v]=min_idx;
+            }
+
+        }
+
+
+    }
+    //now we have our minweights and parent array let make the result vector
+    vector<pair<pair<int,int>,int>>result;
+
+    for(int i=2;i<=n;i++)
+    {
+
+        result.push_back(make_pair(make_pair(parent[i],i),minWeight[i]));
+
+
+    }
+    return result;
+    
+}
