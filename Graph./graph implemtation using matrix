@@ -1,0 +1,32 @@
+                                                 //  implementation of grpah using matrix and list
+#include<bits/stdc++.h>
+using namespace std;
+int main() {
+    int n,m;
+    cin>>n>>m;
+    int adjMatrix[n+1][n+1]; //1 based indexed nodes
+    for(int i=0;i<n+1;i++)
+    {
+        int u,v;
+        cin>>u>>v;
+        adjMatrix[u][v]=1; //store weights in case of weighted graph
+        //for unidirected graph
+        adjMatrix[v][u]=1;
+    }
+//Aux.space for storing in matrix is O(N*N)
+    
+    
+    //adjacency list
+    vector<int> adjList[n+1]; //array of vectors ;1 based indexed nodes
+    //incase of weighted graph use vector<pair<int,int>>adjList[n+1]
+    for(int i=0;i<n+1;i++)
+    {
+        int u,v;
+        cin>>u>>v;
+        
+        adjList[u].push_back(v); //for weighted graph store like adjList[u].push_back(make_pair{v,wt});
+        adjList[v].push_back(u);
+    }
+//Aux.space for storing in List is O(2*E) E is no of edges
+    
+}
