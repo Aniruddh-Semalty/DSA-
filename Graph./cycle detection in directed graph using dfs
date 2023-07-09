@@ -1,0 +1,148 @@
+                                                  //cycle detection in directed graph using dfs using 2 arrays
+Bobble BackgroundBobble Head
+Problems
+Courses
+Geek-O-Lympics
+Events
+POTD
+
+Refresh
+
+Time (IST)	Status	Lang	Test Cases	Code
+2023-07-09 15:48:30	Correct	cpp	410 / 410	View
+2023-07-09 15:46:59	Time Limit Exceeded	cpp	310 / 410	View
+2023-07-09 15:45:35	Time Limit Exceeded	cpp	310 / 410	View
+2023-07-09 15:43:31	Correct	cpp	410 / 410	View
+C++ (g++ 5.4)
+
+
+
+
+// } Driver Code Ends
+
+
+ 
+
+Custom Input
+class Solution {
+  private:
+  bool dfs(int node,vector<int>adj[],int vis[],int pathVis[])
+  {
+      vis[node]=1;
+      pathVis[node]=1;
+      for(auto it: adj[node])
+      {
+          if(!vis[it])
+          {
+              if(dfs(it,adj,vis,pathVis)==true)
+              return true;
+          }
+          else if(pathVis[it])
+          {
+              return true;
+          }
+          
+          
+      }
+      pathVis[node]=0;
+      return false;
+  }
+  public:
+   
+    bool isCyclic(int V, vector<int> adj[]) {
+        int vis[V]={0};
+        int pathVis[V]={0};
+        for(int i=0;i<V;i++)
+        {
+            if(!vis[i])
+            {
+                if(dfs(i,adj,vis,pathVis)==true)
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+
+
+
+
+
+
+
+///////////////////cycle detection in directed graph using dfs only using a single visited array//////////////////////////
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+class Solution {
+  private:
+  bool dfs(int node,vector<int>adj[],int vis[])
+  {
+      
+      vis[node]+=1;
+      vis[node]+=1;
+      for(auto it: adj[node])
+      {
+          
+          if(!vis[it])
+          {
+              if(dfs(it,adj,vis)==true)
+              return true;
+          }
+         
+          else if(vis[it]==2)
+          {
+              return true;
+          }
+          
+          
+      }
+      vis[node]-=1;
+      return false;
+  }
+  public:
+   
+    bool isCyclic(int V, vector<int> adj[]) {
+        int vis[V]={0};
+       
+        for(int i=0;i<V;i++)
+        {
+            if(!vis[i])
+            {
+                if(dfs(i,adj,vis)==true)
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() {
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int V, E;
+        cin >> V >> E;
+
+        vector<int> adj[V];
+
+        for (int i = 0; i < E; i++) {
+            int u, v;
+            cin >> u >> v;
+            adj[u].push_back(v);
+        }
+
+        Solution obj;
+        cout << obj.isCyclic(V, adj) << "\n";
+    }
+
+    return 0;
+}
+
+// } Driver Code Ends
